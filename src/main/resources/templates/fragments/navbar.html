@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav class="navbar navbar-expand-lg topbar sticky-top" th:fragment="navbar">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
+            <span class="brand-mark">SB</span>
+            <span>Smart Business</span>
+        </a>
+
+        <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuSistema"
+                aria-controls="menuSistema" aria-expanded="false" aria-label="Alternar navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="menuSistema">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 nav-modern">
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE','OPERADOR')">
+                    <a class="nav-link" th:href="@{/}">Início</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE','OPERADOR')">
+                    <a class="nav-link" th:href="@{/clientes}">Clientes</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE','OPERADOR')">
+                    <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE','OPERADOR')">
+                    <a class="nav-link" th:href="@{/vendas}">Vendas</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE','OPERADOR')">
+                    <a class="nav-link nav-link-caixa"
+                       th:href="@{/pdv}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Caixa
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','GERENTE')">
+                    <a class="nav-link" th:href="@{/financeiro}">Financeiro</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/empresa}">Minha Empresa</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/empresa/usuarios}">Usuários</a>
+                </li>
+            </ul>
+
+            <div class="navbar-user ms-lg-3" sec:authorize="isAuthenticated()">
+                <div class="user-avatar">U</div>
+                <div class="user-meta">
+                    <small>Painel administrativo</small>
+                    <strong>Usuário autenticado</strong>
+                </div>
+            </div>
+
+            <form th:action="@{/logout}" method="post" class="ms-lg-3 mt-3 mt-lg-0">
+                <button type="submit" class="btn btn-outline-light btn-sm btn-logout">Sair</button>
+            </form>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

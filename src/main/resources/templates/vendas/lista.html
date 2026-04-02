@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Vendas')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="section-header d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="page-title">Vendas</h1>
+            <p class="page-subtitle">Gerencie as vendas realizadas pela empresa.</p>
+        </div>
+        <a th:href="@{/vendas/novo}" class="btn btn-primary">Nova venda</a>
+    </div>
+
+    <div th:if="${sucesso}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${sucesso}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${erro}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+
+    <div class="card content-card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Observações</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(vendas)}">
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Nenhuma venda cadastrada até o momento.
+                        </td>
+                    </tr>
+                    <tr th:each="venda : ${vendas}">
+                        <td th:text="${#temporals.format(venda.dataVenda, 'dd/MM/yyyy')}">01/04/2026</td>
+                        <td th:text="${venda.cliente != null ? venda.cliente.nome : '-'}">Cliente</td>
+                        <td th:text="${#numbers.formatDecimal(venda.valorTotal, 1, 'POINT', 2, 'COMMA')}">0,00</td>
+                        <td th:text="${venda.observacoes != null && !#strings.isEmpty(venda.observacoes) ? venda.observacoes : '-'}">Observação</td>
+                        <td class="text-end">
+                            <a th:href="@{/vendas/editar/{id}(id=${venda.id})}" class="btn btn-sm btn-outline-primary">
+                                Editar
+                            </a>
+                            <a th:href="@{/vendas/excluir/{id}(id=${venda.id})}"
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Deseja realmente excluir esta venda?');">
+                                Excluir
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

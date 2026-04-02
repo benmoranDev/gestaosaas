@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Financeiro')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="section-header">
+        <div>
+            <h1 class="page-title">Financeiro</h1>
+            <p class="page-subtitle">Acompanhe entradas, saídas, saldo previsto e lançamentos financeiros.</p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 quick-actions">
+            <a th:href="@{/financeiro/receber/nova}" class="btn btn-primary">Nova conta a receber</a>
+            <a th:href="@{/financeiro/pagar/nova}" class="btn btn-secondary">Nova conta a pagar</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card kpi-card h-100 kpi-positive">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">💵</div>
+                        <span class="kpi-badge success">Entrada</span>
+                    </div>
+                    <div class="dashboard-label">Total a receber</div>
+                    <p class="dashboard-number metric-positive" th:text="${totalReceberFormatado}">R$ 0,00</p>
+                    <small class="kpi-helper">Valores previstos para entrada.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card kpi-card h-100 kpi-negative">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">💳</div>
+                        <span class="kpi-badge danger">Saída</span>
+                    </div>
+                    <div class="dashboard-label">Total a pagar</div>
+                    <p class="dashboard-number metric-negative" th:text="${totalPagarFormatado}">R$ 0,00</p>
+                    <small class="kpi-helper">Compromissos financeiros pendentes.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">🏦</div>
+                        <span class="kpi-badge primary">Saldo</span>
+                    </div>
+                    <div class="dashboard-label">Saldo previsto</div>
+                    <p class="dashboard-number" th:text="${saldoPrevistoFormatado}">R$ 0,00</p>
+                    <small class="kpi-helper">Resultado projetado entre receitas e despesas.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card content-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h2 class="sales-section-title mb-1">Contas a receber</h2>
+                            <p class="page-subtitle mb-0">Lançamentos previstos de entrada.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Vencimento</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="conta : ${contasReceber}">
+                                <td th:text="${conta.descricao}">Descrição</td>
+                                <td th:text="${conta.dataVencimento}">2026-03-31</td>
+                                <td th:text="${#numbers.formatCurrency(conta.valor)}">R$ 0,00</td>
+                                <td>
+                                    <span class="badge bg-success" th:if="${conta.recebida}">Recebida</span>
+                                    <span class="badge bg-warning text-dark" th:unless="${conta.recebida}">Pendente</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(contasReceber)}">
+                                <td colspan="4" class="text-center py-4 text-muted">Nenhuma conta a receber cadastrada.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card content-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h2 class="sales-section-title mb-1">Contas a pagar</h2>
+                            <p class="page-subtitle mb-0">Lançamentos previstos de saída.</p>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th>Vencimento</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="conta : ${contasPagar}">
+                                <td th:text="${conta.descricao}">Descrição</td>
+                                <td th:text="${conta.dataVencimento}">2026-03-31</td>
+                                <td th:text="${#numbers.formatCurrency(conta.valor)}">R$ 0,00</td>
+                                <td>
+                                    <span class="badge bg-success" th:if="${conta.paga}">Paga</span>
+                                    <span class="badge bg-danger" th:unless="${conta.paga}">Aberta</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(contasPagar)}">
+                                <td colspan="4" class="text-center py-4 text-muted">Nenhuma conta a pagar cadastrada.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

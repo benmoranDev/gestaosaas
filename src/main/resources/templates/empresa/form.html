@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Minha Empresa')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="section-header">
+        <div>
+            <h1 class="page-title">Minha Empresa</h1>
+            <p class="page-subtitle">Atualize as informações principais da empresa atual.</p>
+        </div>
+    </div>
+
+    <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <div class="card content-card">
+        <div class="card-body">
+            <form th:action="@{/empresa/salvar}" th:object="${empresaForm}" method="post">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="nome">Nome da empresa</label>
+                        <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Digite o nome da empresa">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="slug">Slug</label>
+                        <input type="text" id="slug" th:field="*{slug}" class="form-control" placeholder="empresa-slug">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                    <a th:href="@{/}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

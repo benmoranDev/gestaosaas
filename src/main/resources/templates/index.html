@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Painel do sistema')}"></head>
+<body>
+
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="welcome-box">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <span class="badge bg-light text-primary mb-3">Painel principal</span>
+                <h1>Bem-vindo ao Smart Business - Gestão de Negócios </h1>
+                <p>Acompanhe os indicadores mais importantes da operação e do financeiro em um só lugar.</p>
+            </div>
+            <div class="hero-mini-card">
+                <small>Status do sistema</small>
+                <strong>Operação ativa</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-header">
+        <div>
+            <h2 class="page-title">Visão geral</h2>
+            <p class="page-subtitle">Indicadores principais da empresa em tempo real.</p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 quick-actions">
+            <a th:href="@{/clientes/novo}" class="btn btn-primary">Novo cliente</a>
+            <a th:href="@{/produtos/novo}" class="btn btn-secondary">Novo produto</a>
+            <a th:href="@{/vendas/novo}" class="btn btn-secondary">Nova venda</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">👥</div>
+                        <span class="kpi-badge neutral">Base</span>
+                    </div>
+                    <div class="dashboard-label">Total de clientes</div>
+                    <p class="dashboard-number" th:text="${totalClientes} ?: 0">0</p>
+                    <small class="kpi-helper">Clientes cadastrados no sistema</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">📦</div>
+                        <span class="kpi-badge neutral">Catálogo</span>
+                    </div>
+                    <div class="dashboard-label">Total de produtos</div>
+                    <p class="dashboard-number" th:text="${totalProdutos} ?: 0">0</p>
+                    <small class="kpi-helper">Itens disponíveis para operação</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">🛒</div>
+                        <span class="kpi-badge info">Comercial</span>
+                    </div>
+                    <div class="dashboard-label">Total de vendas</div>
+                    <p class="dashboard-number" th:text="${totalVendas} ?: 0">0</p>
+                    <small class="kpi-helper">Registros concluídos no sistema</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100 kpi-positive">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">💰</div>
+                        <span class="kpi-badge success">Entrada</span>
+                    </div>
+                    <div class="dashboard-label">Total a receber</div>
+                    <p class="dashboard-number metric-positive" th:text="${totalReceberFormatado} ?: 'R$ 0,00'">R$ 0,00</p>
+                    <small class="kpi-helper">Receitas previstas e pendentes</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100 kpi-negative">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">🧾</div>
+                        <span class="kpi-badge danger">Saída</span>
+                    </div>
+                    <div class="dashboard-label">Total a pagar</div>
+                    <p class="dashboard-number metric-negative" th:text="${totalPagarFormatado} ?: 'R$ 0,00'">R$ 0,00</p>
+                    <small class="kpi-helper">Despesas previstas e obrigações</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-4">
+            <div class="card dashboard-card kpi-card h-100">
+                <div class="card-body">
+                    <div class="kpi-card-top">
+                        <div class="kpi-icon">📈</div>
+                        <span class="kpi-badge primary">Resultado</span>
+                    </div>
+                    <div class="dashboard-label">Saldo previsto</div>
+                    <p class="dashboard-number" th:text="${saldoPrevistoFormatado} ?: 'R$ 0,00'">R$ 0,00</p>
+                    <small class="kpi-helper">Diferença entre entradas e saídas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

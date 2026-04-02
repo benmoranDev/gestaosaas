@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa | Smart Business</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/css/App.css}">
+    <link rel="stylesheet" th:href="@{/css/pdv.css}">
+</head>
+<body>
+<div class="pdv-shell">
+
+    <header class="pdv-topbar">
+        <div class="pdv-brand">
+            <div class="pdv-brand-mark">SB</div>
+            <div>
+                <span class="pdv-kicker">Caixa</span>
+                <h1>Frente de caixa</h1>
+                <p class="pdv-subtitle">Operação rápida, visual limpo e fechamento direto da venda.</p>
+            </div>
+        </div>
+
+        <div class="pdv-top-actions">
+            <a th:href="@{/vendas}" class="btn-pdv-light">
+                <i class="bi bi-receipt"></i>
+                Histórico
+            </a>
+            <a th:href="@{/}" class="btn-pdv-dark">
+                <i class="bi bi-arrow-left"></i>
+                Voltar ao painel
+            </a>
+        </div>
+    </header>
+
+    <div class="pdv-layout">
+        <section class="pdv-panel pdv-left">
+            <div class="pdv-section-head">
+                <div>
+                    <h2>Produtos disponíveis</h2>
+                    <p>Selecione os itens para montar a venda no caixa.</p>
+                </div>
+            </div>
+
+            <div class="pdv-search-wrap">
+                <i class="bi bi-search pdv-search-icon"></i>
+                <input type="text" id="buscaProduto" placeholder="Buscar produto por nome..." oninput="filtrarProdutos()">
+            </div>
+
+            <div class="pdv-products-grid" id="gridProdutos">
+                <div class="produto-card"
+                     th:each="produto : ${produtos}"
+                     th:data-id="${produto.id}"
+                     th:data-nome="${produto.nome}"
+                     th:data-preco="${produto.preco}"
+                     th:data-estoque="${produto.quantidadeEstoque}"
+                     th:data-descricao="${produto.descricao}"
+                     th:onclick="|adicionarProduto(${produto.id}, '${#strings.escapeJavaScript(produto.nome)}', ${produto.preco}, ${produto.quantidadeEstoque}, '${#strings.escapeJavaScript(produto.descricao)}')|">
+
+                    <div>
+                        <span class="produto-tag">
+                            <i class="bi bi-box-seam"></i>
+                            Produto
+                        </span>
+
+                        <h3 class="produto-nome" th:text="${produto.nome}">Produto</h3>
+                        <p class="produto-descricao"
+                           th:text="${produto.descricao != null && !#strings.isEmpty(produto.descricao) ? produto.descricao : 'Produto disponível para venda no caixa.'}">
+                            Descrição
+                        </p>
+                    </div>
+
+                    <div class="produto-footer">
+                        <div>
+                            <div class="produto-preco"
+                                 th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">
+                                R$ 0,00
+                            </div>
+                            <div class="produto-estoque"
+                                 th:text="${produto.quantidadeEstoque + ' em estoque'}">
+                                0 em estoque
+                            </div>
+                        </div>
+
+                        <button type="button" class="produto-btn">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="pdv-panel pdv-right">
+            <form th:action="@{/pdv/finalizar}" method="post" onsubmit="return prepararEnvio()">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" name="itensJson" id="itensJson">
+
+                <div class="carrinho-header">
+                    <div>
+                        <h3>Carrinho da venda</h3>
+                        <p>Revise os itens e finalize o recebimento.</p>
+                    </div>
+                    <div class="pill-total-itens" id="badgeItens">0</div>
+                </div>
+
+                <div th:if="${sucesso}" class="pdv-alert pdv-alert-success">
+                    <span th:text="${sucesso}"></span>
+                </div>
+
+                <div th:if="${erro}" class="pdv-alert pdv-alert-error">
+                    <span th:text="${erro}"></span>
+                </div>
+
+                <div class="pdv-field">
+                    <label for="clienteId">Cliente</label>
+                    <select id="clienteId" name="clienteId">
+                        <option value="">Consumidor final</option>
+                        <option th:each="cliente : ${clientes}"
+                                th:value="${cliente.id}"
+                                th:text="${cliente.nome}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="carrinho-itens" id="listaCarrinho">
+                    <div class="carrinho-vazio" id="estadoVazio">
+                        <i class="bi bi-cart3 carrinho-vazio-icone"></i>
+                        <div>Nenhum item adicionado ao carrinho.</div>
+                    </div>
+                </div>
+
+                <div class="resumo-box">
+                    <small>Total da venda</small>
+                    <div class="resumo-total" id="valorTotalVenda">R$ 0,00</div>
+
+                    <div class="resumo-linha">
+                        <span>Itens</span>
+                        <strong id="resumoQuantidadeItens">0</strong>
+                    </div>
+
+                    <div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <strong id="resumoSubtotal">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <div class="pagamento-grid">
+                    <div class="pagamento-option" th:each="forma, iter : ${formasPagamento}">
+                        <input type="radio"
+                               name="formaPagamento"
+                               th:id="'formaPagamento_' + ${forma.name()}"
+                               th:value="${forma.name()}"
+                               th:checked="${iter.index == 0}"
+                               onchange="atualizarPagamento()">
+                        <label th:for="'formaPagamento_' + ${forma.name()}">
+                            <strong th:text="${#strings.replace(forma.name(), '_', ' ')}">Forma</strong>
+                            <span>Selecione para finalizar.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pdv-field" id="blocoValorRecebido">
+                    <label for="valorRecebido">Valor recebido</label>
+                    <input type="number"
+                           step="0.01"
+                           min="0"
+                           id="valorRecebido"
+                           name="valorRecebido"
+                           placeholder="0.00"
+                           oninput="calcularTroco()">
+                </div>
+
+                <div class="troco-box">
+                    <span>Troco calculado</span>
+                    <strong id="trocoVenda">R$ 0,00</strong>
+                </div>
+
+                <button type="submit" class="btn-finalizar">
+                    <i class="bi bi-check2-circle"></i>
+                    Finalizar venda
+                </button>
+
+                <button type="button" class="btn-limpar" onclick="limparCarrinho()">
+                    Limpar carrinho
+                </button>
+            </form>
+        </aside>
+    </div>
+</div>
+
+<script th:src="@{/js/App.js}"></script>
+<script th:src="@{/js/pdv.js}"></script>
+</body>
+</html>

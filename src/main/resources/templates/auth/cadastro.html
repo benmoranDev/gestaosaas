@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Empresa</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <!-- Card principal do formulário -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Criar conta da empresa</h2>
+
+                    <!-- Mensagem de erro geral -->
+                    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+                    <!-- Formulário de cadastro da empresa -->
+                    <form th:action="@{/cadastro}" th:object="${cadastroEmpresaForm}" method="post">
+
+                        <!-- Campo: nome da empresa -->
+                        <div class="mb-3">
+                            <label class="form-label">Nome da empresa</label>
+                            <input type="text" class="form-control" th:field="*{nomeEmpresa}">
+                            <div class="text-danger small" th:errors="*{nomeEmpresa}"></div>
+                        </div>
+
+                        <!-- Campo: slug da empresa -->
+                        <div class="mb-3">
+                            <label class="form-label">Slug da empresa</label>
+                            <input type="text" class="form-control" th:field="*{slugEmpresa}">
+                            <div class="form-text">Exemplo: minha-loja, oficina-central</div>
+                            <div class="text-danger small" th:errors="*{slugEmpresa}"></div>
+                        </div>
+
+                        <!-- Campo: nome do administrador -->
+                        <div class="mb-3">
+                            <label class="form-label">Nome do administrador</label>
+                            <input type="text" class="form-control" th:field="*{nomeAdministrador}">
+                            <div class="text-danger small" th:errors="*{nomeAdministrador}"></div>
+                        </div>
+
+                        <!-- Campo: email do administrador -->
+                        <div class="mb-3">
+                            <label class="form-label">Email do administrador</label>
+                            <input type="email" class="form-control" th:field="*{emailAdministrador}">
+                            <div class="text-danger small" th:errors="*{emailAdministrador}"></div>
+                        </div>
+
+                        <!-- Campo: senha -->
+                        <div class="mb-4">
+                            <label class="form-label">Senha</label>
+                            <input type="password" class="form-control" th:field="*{senha}">
+                            <div class="text-danger small" th:errors="*{senha}"></div>
+                        </div>
+
+                        <!-- Botão de envio -->
+                        <button type="submit" class="btn btn-primary w-100">
+                            Criar empresa
+                        </button>
+                    </form>
+
+                    <!-- Link para login -->
+                    <div class="text-center mt-3">
+                        <a th:href="@{/login}">Já tenho conta</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

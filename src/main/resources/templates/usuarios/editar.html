@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Editar usuário')}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<main class="container py-4">
+    <div class="section-header">
+        <div>
+            <h1 class="page-title">Editar usuário</h1>
+            <p class="page-subtitle">Atualize os dados do usuário selecionado.</p>
+        </div>
+    </div>
+
+    <div class="card content-card">
+        <div class="card-body">
+            <form th:action="@{/empresa/usuarios/atualizar}" th:object="${usuario}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nome</label>
+                        <input type="text" th:field="*{nome}" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" th:field="*{email}" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Perfil</label>
+                        <select th:field="*{perfil}" class="form-select">
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="GERENTE">GERENTE</option>
+                            <option value="OPERADOR">OPERADOR</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Nova senha</label>
+                        <input type="password" name="novaSenha" class="form-control" placeholder="Preencha apenas se quiser alterar">
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" th:field="*{ativo}" id="ativoEditar">
+                            <label class="form-check-label" for="ativoEditar">Usuário ativo</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                    <a th:href="@{/empresa/usuarios}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

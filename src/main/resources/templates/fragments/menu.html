@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav>
+    <ul>
+        <li sec:authorize="hasAnyAuthority('ADMIN','GERENTE','OPERADOR')">
+            <a th:href="@{/}">Início</a>
+        </li>
+
+        <li sec:authorize="hasAnyAuthority('ADMIN','GERENTE','OPERADOR')">
+            <a th:href="@{/clientes}">Clientes</a>
+        </li>
+
+        <li sec:authorize="hasAnyAuthority('ADMIN','GERENTE','OPERADOR')">
+            <a th:href="@{/produtos}">Produtos</a>
+        </li>
+
+        <li sec:authorize="hasAnyAuthority('ADMIN','GERENTE','OPERADOR')">
+            <a th:href="@{/vendas}">Vendas</a>
+        </li>
+
+        <li sec:authorize="hasAnyAuthority('ADMIN','GERENTE')">
+            <a th:href="@{/financeiro}">Financeiro</a>
+        </li>
+
+        <li sec:authorize="hasAuthority('ADMIN')">
+            <a th:href="@{/empresa}">Minha Empresa</a>
+        </li>
+
+        <li sec:authorize="hasAuthority('ADMIN')">
+            <a th:href="@{/empresa/usuarios}">Usuários</a>
+        </li>
+    </ul>
+</nav>
+
+</body>
+</html>
