@@ -27,19 +27,33 @@ public class DataLoader {
                         return empresaRepository.save(e);
                     });
 
-            if (usuarioRepository.findByEmail("admin@gestao.com").isEmpty()) {
-                Usuario admin = new Usuario();
-                admin.setNome("Administrador");
-                admin.setEmail("admin@gestao.com");
-                admin.setSenha(passwordEncoder.encode("123456"));
-                admin.setPerfil(Perfil.ADMIN);
-                admin.setAtivo(true);
-                admin.setEmpresa(empresa);
+            criarUsuario(usuarioRepository, passwordEncoder, empresa,
+                    "Administrador",    "admin@gestao.com",    "123456", Perfil.ADMIN);
 
-                usuarioRepository.save(admin);
-            }
+            criarUsuario(usuarioRepository, passwordEncoder, empresa,
+                    "Maria Caixa",      "maria@gestao.com",    "123456", Perfil.OPERADOR);
+
+            criarUsuario(usuarioRepository, passwordEncoder, empresa,
+                    "Ana Gerente",      "ana@gestao.com",      "123456", Perfil.GERENTE);
         };
+    }
 
-
+    private void criarUsuario(UsuarioRepository repo,
+                              PasswordEncoder encoder,
+                              Empresa empresa,
+                              String nome,
+                              String email,
+                              String senha,
+                              Perfil perfil) {
+        if (repo.findByEmail(email).isEmpty()) {
+            Usuario u = new Usuario();
+            u.setNome(nome);
+            u.setEmail(email);
+            u.setSenha(encoder.encode(senha));
+            u.setPerfil(perfil);
+            u.setAtivo(true);
+            u.setEmpresa(empresa);
+            repo.save(u);
+        }
     }
 }

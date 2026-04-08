@@ -35,9 +35,7 @@ public class PdvController {
         this.objectMapper = objectMapper;
     }
 
-    /**
-     * Exibe a tela principal do PDV.
-     */
+    //Exibe a tela principal do PDV.
     @GetMapping
     public String index(Model model) {
         model.addAttribute("clientes", vendaService.listarClientesDaEmpresa());
@@ -47,9 +45,7 @@ public class PdvController {
         return "pdv/index";
     }
 
-    /**
-     * Finaliza a venda enviada pelo carrinho do PDV.
-     */
+    //Finaliza a venda enviada pelo carrinho do PDV.
     @PostMapping("/finalizar")
     public String finalizarVenda(@ModelAttribute PdvFinalizarForm pdvForm,
                                  RedirectAttributes redirectAttributes) {

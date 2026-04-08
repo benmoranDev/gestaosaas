@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -198,6 +199,24 @@ public class VendaService {
             venda.setValorRecebido(null);
             venda.setTroco(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
         }
+    }
+
+    @Transactional
+    public Venda salvar(Venda venda) {
+        return vendaRepository.save(venda); // 👈 delega ao repositório
+    }
+
+    @Transactional
+    public void marcarComoAguardandoPix(Venda venda) {
+        venda.setStatusPagamento(StatusPagamento.AGUARDANDO_PIX); // 👈 ajuste o enum correto
+        vendaRepository.save(venda);
+    }
+
+    @Transactional
+    public void confirmarPagamentoPix(Venda venda) {
+        venda.setStatusPagamento(StatusPagamento.PAGO); // 👈 ajuste o enum correto
+        venda.setDataPagamento(LocalDateTime.now());    // 👈 se existir o campo
+        vendaRepository.save(venda);
     }
 
     private boolean itemValido(ItemVenda itemForm) {

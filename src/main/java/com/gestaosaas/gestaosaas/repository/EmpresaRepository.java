@@ -10,4 +10,5 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     Optional<Empresa> findBySlug(String slug);
 
     boolean existsBySlug(String slug);
+
 }

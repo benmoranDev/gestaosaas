@@ -10,9 +10,7 @@ import jakarta.validation.constraints.Size;
  */
 public class CadastroEmpresaForm {
 
-    /**
-     * Nome da empresa que será criada no sistema.
-     */
+    //Nome da empresa que será criada no sistema.
     @NotBlank(message = "O nome da empresa é obrigatório")
     private String nomeEmpresa;
 
@@ -23,22 +21,18 @@ public class CadastroEmpresaForm {
     @NotBlank(message = "O slug da empresa é obrigatório")
     private String slugEmpresa;
 
-    /**
-     * Nome do usuário administrador da empresa.
-     */
+    //Nome do usuário administrador da empresa.
+
     @NotBlank(message = "O nome do administrador é obrigatório")
     private String nomeAdministrador;
 
-    /**
-     * Email do usuário administrador.
-     */
+    //Email do usuário administrador.
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "Informe um email válido")
     private String emailAdministrador;
 
-    /**
-     * Senha inicial do administrador.
-     */
+    //Senha inicial do administrador.
+
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String senha;

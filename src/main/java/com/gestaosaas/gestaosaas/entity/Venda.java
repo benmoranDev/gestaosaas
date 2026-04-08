@@ -51,6 +51,109 @@ public class Venda {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public Venda buscarPorId(Long id) {
+        throw new UnsupportedOperationException("Implemente usando seu VendaRepository real");
+    }
+
+    public Venda salvar(Venda venda) {
+        throw new UnsupportedOperationException("Implemente usando seu VendaRepository real");
+    }
+
+    // Marca a venda como aguardando pagamento Pix.
+    public Venda marcarComoAguardandoPix(Venda venda) {
+        venda.setStatusPagamento(StatusPagamento.AGUARDANDO_PIX);
+        return salvar(venda);
+    }
+
+    // Confirma pagamento da venda.
+    public Venda confirmarPagamentoPix(Venda venda) {
+        venda.setStatusPagamento(StatusPagamento.PAGO);
+        return salvar(venda);
+    }
+
+    // Na entidade Venda
+    @Column(name = "data_pagamento")
+    private LocalDateTime dataPagamento;
+
+    // getter e setter
+    public LocalDateTime getDataPagamento() {
+        return dataPagamento;
+    }
+
+    public void setDataPagamento(LocalDateTime dataPagamento) {
+        this.dataPagamento = dataPagamento;
+    }
+
+    @Enumerated(EnumType.STRING)
+    private StatusPagamento statusPagamento = StatusPagamento.PENDENTE;
+
+    @Enumerated(EnumType.STRING)
+    private TipoDocumentoFiscal tipoDocumentoFiscal = TipoDocumentoFiscal.NENHUM;
+
+    private String numeroDocumentoFiscal;
+    private String serieDocumentoFiscal;
+    private String chaveAcessoFiscal;
+    private String protocoloAutorizacaoFiscal;
+    private LocalDateTime dataEmissaoFiscal;
+
+
+
+    public StatusPagamento getStatusPagamento() {
+        return statusPagamento;
+    }
+
+    public void setStatusPagamento(StatusPagamento statusPagamento) {
+        this.statusPagamento = statusPagamento;
+    }
+
+    public TipoDocumentoFiscal getTipoDocumentoFiscal() {
+        return tipoDocumentoFiscal;
+    }
+
+    public void setTipoDocumentoFiscal(TipoDocumentoFiscal tipoDocumentoFiscal) {
+        this.tipoDocumentoFiscal = tipoDocumentoFiscal;
+    }
+
+    public String getNumeroDocumentoFiscal() {
+        return numeroDocumentoFiscal;
+    }
+
+    public void setNumeroDocumentoFiscal(String numeroDocumentoFiscal) {
+        this.numeroDocumentoFiscal = numeroDocumentoFiscal;
+    }
+
+    public String getSerieDocumentoFiscal() {
+        return serieDocumentoFiscal;
+    }
+
+    public void setSerieDocumentoFiscal(String serieDocumentoFiscal) {
+        this.serieDocumentoFiscal = serieDocumentoFiscal;
+    }
+
+    public String getChaveAcessoFiscal() {
+        return chaveAcessoFiscal;
+    }
+
+    public void setChaveAcessoFiscal(String chaveAcessoFiscal) {
+        this.chaveAcessoFiscal = chaveAcessoFiscal;
+    }
+
+    public String getProtocoloAutorizacaoFiscal() {
+        return protocoloAutorizacaoFiscal;
+    }
+
+    public void setProtocoloAutorizacaoFiscal(String protocoloAutorizacaoFiscal) {
+        this.protocoloAutorizacaoFiscal = protocoloAutorizacaoFiscal;
+    }
+
+    public LocalDateTime getDataEmissaoFiscal() {
+        return dataEmissaoFiscal;
+    }
+
+    public void setDataEmissaoFiscal(LocalDateTime dataEmissaoFiscal) {
+        this.dataEmissaoFiscal = dataEmissaoFiscal;
+    }
+
     public void adicionarItem(ItemVenda item) {
         item.setVenda(this);
         this.itens.add(item);

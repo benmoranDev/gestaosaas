@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Alertas globais
     const alerts = document.querySelectorAll(".alert");
+
 
     alerts.forEach(function (alert) {
         setTimeout(function () {

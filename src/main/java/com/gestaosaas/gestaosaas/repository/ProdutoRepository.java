@@ -15,5 +15,4 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     Optional<Produto> findByIdAndEmpresa(Long id, Empresa empresa);
 
     long countByEmpresa(Empresa empresa);
-
 }

@@ -6,34 +6,25 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/**
- * DTO usado para cadastro de usuários da empresa.
- */
+//DTO usado para cadastro de usuários da empresa.
+
 public class UsuarioForm {
 
-    /**
-     * Nome completo do usuário.
-     */
+    //Nome completo do usuário.
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
-    /**
-     * Email do usuário.
-     */
+    //Email do usuário.
     @NotBlank(message = "O email é obrigatório")
     @Email(message = "Informe um email válido")
     private String email;
 
-    /**
-     * Senha inicial do usuário.
-     */
+    //Senha inicial do usuário.
     @NotBlank(message = "A senha é obrigatória")
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String senha;
 
-    /**
-     * Perfil do usuário dentro da empresa.
-     */
+    //Perfil do usuário dentro da empresa.
     @NotNull(message = "O perfil é obrigatório")
     private Perfil perfil;
 

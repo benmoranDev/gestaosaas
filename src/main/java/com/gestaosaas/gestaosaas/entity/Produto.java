@@ -32,6 +32,17 @@ public class Produto {
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
+    @Column(name = "codigo_barras")
+    private String codigoBarras;
+
+    public String getCodigoBarras() {
+        return codigoBarras;
+    }
+
+    public void setCodigoBarras(String codigoBarras) {
+        this.codigoBarras = codigoBarras;
+    }
+
     public Long getId() {
         return id;
     }

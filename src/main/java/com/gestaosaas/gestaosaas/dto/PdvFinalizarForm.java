@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 public class PdvFinalizarForm {
 
     private Long clienteId;
-    private String itensJson;
     private FormaPagamento formaPagamento;
     private BigDecimal valorRecebido;
+    private String itensJson;
 
     public Long getClienteId() {
         return clienteId;
@@ -17,14 +17,6 @@ public class PdvFinalizarForm {
 
     public void setClienteId(Long clienteId) {
         this.clienteId = clienteId;
-    }
-
-    public String getItensJson() {
-        return itensJson;
-    }
-
-    public void setItensJson(String itensJson) {
-        this.itensJson = itensJson;
     }
 
     public FormaPagamento getFormaPagamento() {
@@ -41,5 +33,13 @@ public class PdvFinalizarForm {
 
     public void setValorRecebido(BigDecimal valorRecebido) {
         this.valorRecebido = valorRecebido;
+    }
+
+    public String getItensJson() {
+        return itensJson;
+    }
+
+    public void setItensJson(String itensJson) {
+        this.itensJson = itensJson;
     }
 }
