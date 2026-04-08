@@ -40,6 +40,6 @@ PDV — Frente de Caixa.
 | Persistência | Spring Data JPA + Hibernate |
 | Banco de dados | PostgreSQL 16 |
 | Template engine | Thymeleaf 3 + Thymeleaf Security Extras |
-| Frontend | Bootstrap 5 + JavaScript |
+| Frontend | Bootstrap 4 + JavaScript |
 | Build | Maven |
 | Servidor | Apache Tomcat (embedded) |
