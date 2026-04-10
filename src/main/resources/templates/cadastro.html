@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Cadastrar empresa')}"></head>
+<body class="login-page">
+
+<div class="card shadow-sm border-0" style="width:100%; max-width:760px; border-radius: 22px;">
+    <div class="card-body p-4 p-md-5">
+        <div class="mb-4 text-center">
+            <h2 class="fw-bold">Cadastrar empresa</h2>
+            <p class="text-muted mb-0">Crie sua empresa e o usuário administrador do sistema.</p>
+        </div>
+
+        <form th:action="@{/cadastro}" th:object="${cadastroEmpresaForm}" method="post">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Nome da empresa</label>
+                    <input type="text" th:field="*{nomeEmpresa}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nomeEmpresa')}" th:errors="*{nomeEmpresa}"></div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Slug da empresa</label>
+                    <input type="text" th:field="*{slugEmpresa}" class="form-control" placeholder="minha-loja">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('slugEmpresa')}" th:errors="*{slugEmpresa}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">CNPJ</label>
+                    <input type="text" th:field="*{cnpj}" class="form-control">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Nome do administrador</label>
+                    <input type="text" th:field="*{nomeAdministrador}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nomeAdministrador')}" th:errors="*{nomeAdministrador}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Email do administrador</label>
+                    <input type="email" th:field="*{emailAdministrador}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('emailAdministrador')}" th:errors="*{emailAdministrador}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Senha</label>
+                    <input type="password" th:field="*{senha}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('senha')}" th:errors="*{senha}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Confirmar senha</label>
+                    <input type="password" th:field="*{confirmacaoSenha}" class="form-control">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('confirmacaoSenha')}" th:errors="*{confirmacaoSenha}"></div>
+                </div>
+            </div>
+
+            <div th:if="${erro}" class="alert alert-danger mt-3" th:text="${erro}"></div>
+
+            <div class="d-flex gap-2 mt-4">
+                <a th:href="@{/login}" class="btn btn-outline-secondary w-50">Voltar</a>
+                <button type="submit" class="btn btn-primary w-50">Criar empresa</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.gestaosaas.gestaosaas.controller;
 
 import com.gestaosaas.gestaosaas.dto.CadastroEmpresaForm;
 import com.gestaosaas.gestaosaas.service.CadastroEmpresaService;
+import com.gestaosaas.gestaosaas.service.OnboardingService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,46 +11,55 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-/**
- * Controller responsável pela tela pública de cadastro
- * de novas empresas na plataforma.
- */
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
 @Controller
 public class CadastroEmpresaController {
 
-    private final CadastroEmpresaService cadastroEmpresaService;
+    private final OnboardingService onboardingService;
 
-    public CadastroEmpresaController(CadastroEmpresaService cadastroEmpresaService) {
-        this.cadastroEmpresaService = cadastroEmpresaService;
+    public CadastroEmpresaController(OnboardingService onboardingService) {
+        this.onboardingService = onboardingService;
     }
 
-    /**
-     * Exibe a tela de cadastro de empresa.
-     */
     @GetMapping("/cadastro")
     public String exibirFormulario(Model model) {
-        model.addAttribute("cadastroEmpresaForm", new CadastroEmpresaForm());
-        return "auth/cadastro";
+        if (!model.containsAttribute("cadastroEmpresaForm")) {
+            model.addAttribute("cadastroEmpresaForm", new CadastroEmpresaForm());
+        }
+        return "cadastro";
     }
 
-    /**
-     * Processa o envio do formulário de cadastro.
-     */
     @PostMapping("/cadastro")
-    public String cadastrar(@Valid @ModelAttribute CadastroEmpresaForm cadastroEmpresaForm,
-                            BindingResult result,
-                            Model model) {
+    public String cadastrarEmpresa(
+            @Valid @ModelAttribute("cadastroEmpresaForm") CadastroEmpresaForm form,
+            BindingResult bindingResult,
+            Model model) {
 
-        if (result.hasErrors()) {
-            return "auth/cadastro";
+        if (!form.senhasConferem()) {
+            bindingResult.rejectValue(
+                    "confirmacaoSenha",
+                    "senha.nao.confere",
+                    "As senhas não conferem."
+            );
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "cadastro";
         }
 
         try {
-            cadastroEmpresaService.cadastrarNovaEmpresa(cadastroEmpresaForm);
+            onboardingService.cadastrarEmpresaComAdmin(form);
             return "redirect:/login?cadastroSucesso";
         } catch (RuntimeException ex) {
             model.addAttribute("erro", ex.getMessage());
-            return "auth/cadastro";
+            return "cadastro";
         }
     }
 }

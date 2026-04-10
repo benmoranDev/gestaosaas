@@ -82,4 +82,8 @@ public class Usuario {
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
+
+    public void setRole(String admin) {
+
+    }
 }

@@ -45,4 +45,8 @@ public class Empresa {
     public void setAtiva(boolean ativa) {
         this.ativa = ativa;
     }
+
+    public void setCnpj(String cnpj) {
+
+    }
 }
