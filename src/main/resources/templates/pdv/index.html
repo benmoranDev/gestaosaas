@@ -9,204 +9,465 @@
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">
-    <link rel="stylesheet" th:href="@{/css/App.css}">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
     <link rel="stylesheet" th:href="@{/css/pdv.css}">
 </head>
 <body>
 <div class="pdv-shell">
 
     <header class="pdv-topbar">
-        <div class="pdv-brand">
-            <div class="pdv-brand-mark">SB</div>
+        <div class="pdv-topbar-left">
+            <div class="pdv-brand-mark">PDV</div>
             <div>
-                <span class="pdv-kicker">Caixa</span>
-                <h1>Frente de caixa</h1>
-                <p class="pdv-subtitle">Operação rápida, visual limpo e fechamento direto da venda.</p>
+                <span class="pdv-top-kicker">Smart Business</span>
+                <h1>Frente de Caixa</h1>
+                <p>Venda rápida com leitura, carrinho, recebimento e documento fiscal.</p>
             </div>
         </div>
 
-        <div class="pdv-top-actions">
-            <a th:href="@{/vendas}" class="btn-pdv-light">
-                <i class="bi bi-receipt"></i>
+        <div class="pdv-topbar-right">
+            <div class="pdv-operador-box">
+                <span>Operador</span>
+                <strong sec:authentication="name">Usuário</strong>
+            </div>
+
+            <a th:href="@{/vendas}" class="btn-toolbar-light">
+                <i class="bi bi-clock-history"></i>
                 Histórico
             </a>
-            <a th:href="@{/}" class="btn-pdv-dark">
-                <i class="bi bi-arrow-left"></i>
-                Voltar ao painel
+
+            <a th:href="@{/}" class="btn-toolbar-dark">
+                <i class="bi bi-house-door"></i>
+                Painel
             </a>
         </div>
     </header>
 
-    <div class="pdv-layout">
-        <section class="pdv-panel pdv-left">
-            <div class="pdv-section-head">
-                <div>
-                    <h2>Produtos disponíveis</h2>
-                    <p>Selecione os itens para montar a venda no caixa.</p>
-                </div>
-            </div>
+    <main class="pdv-layout">
 
-            <div class="pdv-scan-box">
-                <label for="codigoBarrasInput" class="pdv-scan-label">Leitura por código de barras</label>
-                <div class="pdv-scan-input-wrap">
-                    <i class="bi bi-upc-scan pdv-scan-icon"></i>
-                    <input type="text"
-                           id="codigoBarrasInput"
-                           class="pdv-scan-input"
-                           placeholder="Aponte o leitor e escaneie o código"
-                           autocomplete="off"
-                           inputmode="numeric">
-                </div>
-                <small class="pdv-scan-help">O leitor deve finalizar a leitura com Enter.</small>
-            </div>
+        <aside class="pdv-sidebar">
+            <button type="button" class="pdv-side-btn">
+                <span class="pdv-side-key">F2</span>
+                <i class="bi bi-cash-coin"></i>
+                <span>Recebimento</span>
+            </button>
 
-            <div class="pdv-search-wrap">
-                <i class="bi bi-search pdv-search-icon"></i>
-                <input type="text" id="buscaProduto" placeholder="Buscar produto por nome...">
-            </div>
+            <button type="button"
+                    class="pdv-side-btn pdv-side-btn-danger"
+                    sec:authorize="hasAnyRole('GERENTE','ADMIN')">
+                <span class="pdv-side-key">F3</span>
+                <i class="bi bi-x-octagon"></i>
+                <span>Cancelamento</span>
+            </button>
 
-            <div class="pdv-products-grid" id="gridProdutos">
-                <div class="produto-card"
-                     th:each="produto : ${produtos}"
-                     th:data-id="${produto.id}"
-                     th:data-nome="${produto.nome}"
-                     th:data-preco="${produto.preco}"
-                     th:data-estoque="${produto.quantidadeEstoque}"
-                     th:data-descricao="${produto.descricao}">
+            <button type="button" class="pdv-side-btn">
+                <span class="pdv-side-key">F4</span>
+                <i class="bi bi-journal-text"></i>
+                <span>Orçamento</span>
+            </button>
+
+            <button type="button" class="pdv-side-btn">
+                <span class="pdv-side-key">F5</span>
+                <i class="bi bi-person-badge"></i>
+                <span>Cliente</span>
+            </button>
+
+            <button type="button" class="pdv-side-btn">
+                <span class="pdv-side-key">F6</span>
+                <i class="bi bi-printer"></i>
+                <span>Imprimir</span>
+            </button>
+        </aside>
+
+        <section class="pdv-center">
+            <div class="pdv-panel pdv-panel-soft">
+                <div class="pdv-panel-head">
                     <div>
-                        <span class="produto-tag">
-                            <i class="bi bi-box-seam"></i>
-                            Produto
-                        </span>
+                        <span class="pdv-section-kicker">Leitura e busca</span>
+                        <h2>Adicionar produtos</h2>
+                    </div>
+                </div>
 
-                        <h3 class="produto-nome" th:text="${produto.nome}">Produto</h3>
-                        <p class="produto-descricao"
-                           th:text="${produto.descricao != null && !#strings.isEmpty(produto.descricao) ? produto.descricao : 'Produto disponível para venda no caixa.'}">
-                            Descrição
-                        </p>
+                <div class="pdv-search-row">
+                    <div class="pdv-field-block">
+                        <label for="codigoBarrasInput">Código de barras</label>
+                        <div class="pdv-input-icon-wrap">
+                            <i class="bi bi-upc-scan"></i>
+                            <input type="text"
+                                   id="codigoBarrasInput"
+                                   class="pdv-input pdv-input-lg"
+                                   placeholder="Escaneie ou digite o código"
+                                   autocomplete="off"
+                                   inputmode="numeric">
+                        </div>
                     </div>
 
-                    <div class="produto-footer">
-                        <div>
-                            <div class="produto-preco"
-                                 th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">
-                                R$ 0,00
-                            </div>
-                            <div class="produto-estoque"
-                                 th:text="${produto.quantidadeEstoque + ' em estoque'}">
-                                0 em estoque
-                            </div>
+                    <div class="pdv-field-block">
+                        <label for="buscaProduto">Buscar produto</label>
+                        <div class="pdv-input-icon-wrap">
+                            <i class="bi bi-search"></i>
+                            <input type="text"
+                                   id="buscaProduto"
+                                   class="pdv-input pdv-input-lg"
+                                   placeholder="Buscar por nome ou descrição">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pdv-panel pdv-panel-white">
+                <div class="pdv-panel-head">
+                    <div>
+                        <span class="pdv-section-kicker">Produtos</span>
+                        <h2>Itens disponíveis no caixa</h2>
+                    </div>
+                </div>
+
+                <div class="pdv-products-grid" id="gridProdutos">
+                    <div class="produto-card"
+                         th:each="produto : ${produtos}"
+                         th:attr="
+                            data-id=${produto.id},
+                            data-nome=${produto.nome},
+                            data-preco=${produto.preco},
+                            data-estoque=${produto.quantidadeEstoque},
+                            data-descricao=${produto.descricao},
+                            data-codigo-barras=${produto.codigoBarras}">
+                        <div class="produto-card-top">
+                            <span class="produto-badge">PRODUTO</span>
+                            <h3 class="produto-nome" th:text="${produto.nome}">Produto</h3>
+                            <p class="produto-descricao"
+                               th:text="${produto.descricao != null && !#strings.isEmpty(produto.descricao) ? produto.descricao : 'Produto disponível para venda no caixa.'}">
+                                Descrição
+                            </p>
                         </div>
 
-                        <button type="button" class="produto-btn js-add-produto">
-                            <i class="bi bi-plus-lg"></i>
-                        </button>
+                        <div class="produto-card-bottom">
+                            <div class="produto-meta">
+                                <strong class="produto-preco"
+                                        th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</strong>
+                                <span class="produto-estoque"
+                                      th:text="${produto.quantidadeEstoque + ' em estoque'}">0 em estoque</span>
+                            </div>
+
+                            <button type="button" class="produto-btn js-add-produto">
+                                <i class="bi bi-plus-lg"></i>
+                                Adicionar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(produtos)}" class="carrinho-vazio">
+                        <i class="bi bi-box-seam carrinho-vazio-icon"></i>
+                        <div>Nenhum produto disponível para venda.</div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <aside class="pdv-panel pdv-right">
             <form th:action="@{/pdv/finalizar}" method="post" id="formPdv">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <input type="hidden" name="itensJson" id="itensJson">
+                <input type="hidden" name="statusFiscal" id="statusFiscal" value="PENDENTE">
+                <input type="hidden" name="troco" id="trocoInput" value="0.00">
 
-                <div class="carrinho-header">
-                    <div>
-                        <h3>Carrinho da venda</h3>
-                        <p>Revise os itens e finalize o recebimento.</p>
-                    </div>
-                    <div class="pill-total-itens" id="badgeItens">0</div>
-                </div>
-
-                <div class="pdv-toast-wrap">
-                    <div id="pdvFeedback" class="pdv-toast" aria-live="polite" aria-atomic="true"></div>
-                </div>
-
-                <div th:if="${sucesso}" class="pdv-alert pdv-alert-success">
-                    <span th:text="${sucesso}"></span>
-                </div>
-
-                <div th:if="${erro}" class="pdv-alert pdv-alert-error">
-                    <span th:text="${erro}"></span>
-                </div>
-
-                <div class="pdv-field">
-                    <label for="clienteId">Cliente</label>
-                    <select id="clienteId" name="clienteId">
-                        <option value="">Consumidor final</option>
-                        <option th:each="cliente : ${clientes}"
-                                th:value="${cliente.id}"
-                                th:text="${cliente.nome}">
-                        </option>
-                    </select>
-                </div>
-
-                <div class="carrinho-itens" id="listaCarrinho">
-                    <div class="carrinho-vazio" id="estadoVazio">
-                        <i class="bi bi-cart3 carrinho-vazio-icon"></i>
-                        <div>Nenhum item adicionado ao carrinho.</div>
-                    </div>
-                </div>
-
-                <div class="resumo-box">
-                    <small>Total da venda</small>
-                    <div class="resumo-total" id="valorTotalVenda">R$ 0,00</div>
-
-                    <div class="resumo-linha">
-                        <span>Itens</span>
-                        <strong id="resumoQuantidadeItens">0</strong>
+                <div class="pdv-panel pdv-panel-receipt">
+                    <div class="pdv-panel-head pdv-panel-head-inline">
+                        <div>
+                            <span class="pdv-section-kicker">Transação</span>
+                            <h2>Carrinho da venda</h2>
+                        </div>
+                        <div class="pill-total-itens" id="badgeItens">0</div>
                     </div>
 
-                    <div class="resumo-linha">
-                        <span>Subtotal</span>
-                        <strong id="resumoSubtotal">R$ 0,00</strong>
+                    <div class="pdv-toast-wrap">
+                        <div id="pdvFeedback" class="pdv-toast" aria-live="polite" aria-atomic="true"></div>
+                    </div>
+
+                    <div th:if="${sucesso}" class="pdv-alert pdv-alert-success">
+                        <span th:text="${sucesso}"></span>
+                    </div>
+
+                    <div th:if="${erro}" class="pdv-alert pdv-alert-error">
+                        <span th:text="${erro}"></span>
+                    </div>
+
+                    <div class="pdv-form-grid">
+                        <div class="pdv-field-block">
+                            <label for="clienteId">Cliente</label>
+                            <select id="clienteId" name="clienteId" class="pdv-input">
+                                <option value="">Consumidor final</option>
+                                <option th:each="cliente : ${clientes}"
+                                        th:value="${cliente.id}"
+                                        th:text="${cliente.nome}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="carrinho-itens" id="listaCarrinho">
+                        <div class="carrinho-vazio" id="estadoVazio">
+                            <i class="bi bi-cart3 carrinho-vazio-icon"></i>
+                            <div>Nenhum item adicionado ao carrinho.</div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="pagamento-grid">
-                    <div class="pagamento-option" th:each="forma, iter : ${formasPagamento}">
-                        <input type="radio"
-                               name="formaPagamento"
-                               th:id="'formaPagamento_' + ${forma.name()}"
-                               th:value="${forma.name()}"
-                               th:checked="${iter.index == 0}">
-                        <label th:for="'formaPagamento_' + ${forma.name()}">
-                            <strong th:text="${#strings.replace(forma.name(), '_', ' ')}">Forma</strong>
-                            <span>Selecione para finalizar.</span>
-                        </label>
+                <div class="pdv-panel pdv-panel-white">
+                    <div class="pdv-panel-head">
+                        <div>
+                            <span class="pdv-section-kicker">Pagamento</span>
+                            <h2>Forma de pagamento</h2>
+                        </div>
+                    </div>
+
+                    <div class="pagamento-grid">
+                        <div class="pagamento-option" th:each="forma, iter : ${formasPagamento}">
+                            <input type="radio"
+                                   name="formaPagamento"
+                                   th:id="'formaPagamento_' + ${forma.name()}"
+                                   th:value="${forma.name()}"
+                                   th:attr="data-forma=${forma.name()}"
+                                   th:checked="${iter.index == 0}">
+                            <label th:for="'formaPagamento_' + ${forma.name()}">
+                                <strong th:text="${
+                                    forma.name() == 'DINHEIRO' ? 'Dinheiro' :
+                                    forma.name() == 'PIX' ? 'PIX' :
+                                    forma.name() == 'CARTAO_DEBITO' ? 'Cartão débito' :
+                                    forma.name() == 'CARTAO_CREDITO' ? 'Cartão crédito' :
+                                    forma.name() == 'VALE_ALIMENTACAO' ? 'Vale alimentação' :
+                                    forma.name()
+                                }">Forma</strong>
+                                <span th:text="${
+                                    forma.name() == 'DINHEIRO' ? 'Com cálculo de troco.' :
+                                    forma.name() == 'PIX' ? 'QR Code e confirmação.' :
+                                    forma.name() == 'CARTAO_DEBITO' ? 'Pagamento eletrônico à vista.' :
+                                    forma.name() == 'CARTAO_CREDITO' ? 'Pagamento no crédito.' :
+                                    forma.name() == 'VALE_ALIMENTACAO' ? 'Benefício/refeição.' :
+                                    'Selecione para continuar.'
+                                }">Descrição</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pdv-dynamic-block" id="blocoDinheiro">
+                        <div class="pdv-field-block">
+                            <label for="valorRecebido">Valor recebido</label>
+                            <input type="number"
+                                   step="0.01"
+                                   min="0"
+                                   id="valorRecebido"
+                                   name="valorRecebido"
+                                   class="pdv-input"
+                                   placeholder="0.00"
+                                   inputmode="decimal">
+                        </div>
+                    </div>
+
+                    <div class="pdv-dynamic-block d-none" id="blocoPix">
+                        <div class="pdv-field-block">
+                            <label for="pixTxId">TXID</label>
+                            <input type="text" id="pixTxId" name="pixTxId" class="pdv-input">
+                        </div>
+
+                        <div class="pdv-field-block">
+                            <label for="pixCopiaCola">PIX copia e cola</label>
+                            <textarea id="pixCopiaCola" name="pixCopiaCola" rows="3" class="pdv-input"></textarea>
+                        </div>
+
+                        <div class="pix-box">
+                            <div class="pix-qr-placeholder" id="pixQrPreview">
+                                <i class="bi bi-qr-code"></i>
+                                <span>QR Code PIX</span>
+                            </div>
+
+                            <div class="pix-actions">
+                                <button type="button" class="btn-inline" id="btnGerarPix">Gerar QR</button>
+                                <button type="button" class="btn-inline" id="btnConfirmarPix">Confirmar</button>
+                            </div>
+
+                            <div class="pix-status" id="pixStatus">Status do PIX: aguardando pagamento</div>
+                        </div>
+                    </div>
+
+                    <div class="pdv-dynamic-block d-none" id="blocoCartao">
+                        <div class="pdv-grid-2">
+                            <div class="pdv-field-block">
+                                <label for="bandeiraCartao">Bandeira</label>
+                                <select id="bandeiraCartao" name="bandeiraCartao" class="pdv-input">
+                                    <option value="">Selecione</option>
+                                    <option value="VISA">Visa</option>
+                                    <option value="MASTERCARD">Mastercard</option>
+                                    <option value="ELO">Elo</option>
+                                    <option value="HIPERCARD">Hipercard</option>
+                                    <option value="AMEX">Amex</option>
+                                    <option value="OUTRA">Outra</option>
+                                </select>
+                            </div>
+
+                            <div class="pdv-field-block">
+                                <label for="ultimosDigitosCartao">Últimos 4 dígitos</label>
+                                <input type="text"
+                                       id="ultimosDigitosCartao"
+                                       name="ultimosDigitosCartao"
+                                       class="pdv-input"
+                                       maxlength="4"
+                                       inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <div class="pdv-grid-2">
+                            <div class="pdv-field-block">
+                                <label for="autorizacaoCartao">Autorização</label>
+                                <input type="text" id="autorizacaoCartao" name="autorizacaoCartao" class="pdv-input">
+                            </div>
+
+                            <div class="pdv-field-block">
+                                <label for="nsuCartao">NSU</label>
+                                <input type="text" id="nsuCartao" name="nsuCartao" class="pdv-input">
+                            </div>
+                        </div>
+
+                        <div class="pdv-field-block">
+                            <label for="operadoraCartao">Operadora / adquirente</label>
+                            <input type="text" id="operadoraCartao" name="operadoraCartao" class="pdv-input">
+                        </div>
+                    </div>
+
+                    <div class="pdv-dynamic-block d-none" id="blocoVale">
+                        <div class="pdv-grid-2">
+                            <div class="pdv-field-block">
+                                <label for="operadoraVale">Operadora</label>
+                                <input type="text" id="operadoraVale" name="operadoraVale" class="pdv-input">
+                            </div>
+
+                            <div class="pdv-field-block">
+                                <label for="codigoAutorizacaoVale">Autorização</label>
+                                <input type="text" id="codigoAutorizacaoVale" name="codigoAutorizacaoVale" class="pdv-input">
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="pdv-field" id="blocoValorRecebido">
-                    <label for="valorRecebido">Valor recebido</label>
-                    <input type="number"
-                           step="0.01"
-                           min="0"
-                           id="valorRecebido"
-                           name="valorRecebido"
-                           placeholder="0.00">
-                </div>
-
-                <div class="troco-box">
-                    <span>Troco calculado</span>
-                    <strong id="trocoVenda">R$ 0,00</strong>
-                </div>
-
-                <button type="submit" class="btn-finalizar">
-                    <i class="bi bi-check2-circle"></i>
-                    Finalizar venda
-                </button>
-
-                <button type="button" class="btn-limpar" id="btnLimparCarrinho">
-                    Limpar carrinho
-                </button>
             </form>
+        </section>
+
+        <aside class="pdv-right">
+            <div class="pdv-panel pdv-panel-fiscal-virtual">
+                <div class="thermal-head">
+                    <div class="thermal-brand">SMART BUSINESS</div>
+                    <div class="thermal-sub">DOCUMENTO AUXILIAR DO PDV</div>
+                </div>
+
+                <div class="thermal-line">
+                    <span>Operador</span>
+                    <strong sec:authentication="name">Usuário</strong>
+                </div>
+
+                <div class="thermal-line">
+                    <span>Cliente</span>
+                    <strong id="clienteFiscalPreview">Consumidor final</strong>
+                </div>
+
+                <div class="thermal-line">
+                    <span>Status fiscal</span>
+                    <strong id="statusFiscalLabel">PENDENTE</strong>
+                </div>
+
+                <div class="thermal-line">
+                    <span>NFC-e / Nota</span>
+                    <strong id="numeroNotaPreview">Ainda não emitida</strong>
+                </div>
+
+                <div class="thermal-line thermal-line-wrap">
+                    <span>Chave</span>
+                    <strong id="chaveNotaPreview">Será gerada após emissão</strong>
+                </div>
+
+                <div class="thermal-divider"></div>
+
+                <div class="thermal-items-title">ITENS DA VENDA</div>
+                <div class="thermal-items-preview" id="itensFiscalPreview">
+                    Nenhum item adicionado.
+                </div>
+
+                <div class="thermal-divider"></div>
+
+                <div class="thermal-line">
+                    <span>Forma pagamento</span>
+                    <strong id="formaPagamentoPreview">DINHEIRO</strong>
+                </div>
+
+                <div class="thermal-line">
+                    <span>Subtotal</span>
+                    <strong id="resumoSubtotalFiscal">R$ 0,00</strong>
+                </div>
+
+                <div class="thermal-line">
+                    <span>Troco</span>
+                    <strong id="trocoFiscal">R$ 0,00</strong>
+                </div>
+
+                <div class="thermal-total">
+                    <span>TOTAL</span>
+                    <strong id="valorTotalFiscal">R$ 0,00</strong>
+                </div>
+            </div>
+
+            <div class="pdv-panel pdv-panel-actions">
+                <div class="pdv-panel-head">
+                    <div>
+                        <span class="pdv-section-kicker">Finalização</span>
+                        <h2>Ações do caixa</h2>
+                    </div>
+                </div>
+
+                <div class="right-actions">
+                    <button type="button" class="btn-inline" id="btnMarcarProcessando">
+                        <i class="bi bi-arrow-repeat"></i>
+                        Em processamento
+                    </button>
+
+                    <button type="button" class="btn-inline" id="btnMarcarAutorizado">
+                        <i class="bi bi-patch-check"></i>
+                        Autorizado
+                    </button>
+
+                    <button type="submit" form="formPdv" class="btn-finalizar">
+                        <i class="bi bi-check2-circle"></i>
+                        Finalizar venda
+                    </button>
+
+                    <button type="button" class="btn-limpar" id="btnLimparCarrinho">
+                        Limpar carrinho
+                    </button>
+                </div>
+            </div>
         </aside>
-    </div>
+    </main>
+
+    <footer class="pdv-footer-bar">
+        <div class="pdv-footer-block">
+            <span>Itens</span>
+            <strong id="resumoQuantidadeItens">0</strong>
+        </div>
+
+        <div class="pdv-footer-block">
+            <span>Subtotal</span>
+            <strong id="resumoSubtotal">R$ 0,00</strong>
+        </div>
+
+        <div class="pdv-footer-block">
+            <span>Troco</span>
+            <strong id="trocoVenda">R$ 0,00</strong>
+        </div>
+
+        <div class="pdv-footer-block pdv-footer-total">
+            <span>Total da venda</span>
+            <strong id="valorTotalVenda">R$ 0,00</strong>
+        </div>
+    </footer>
 </div>
 
-<script th:src="@{/js/App.js}"></script>
+<script th:src="@{/js/app.js}"></script>
 <script th:src="@{/js/pdv.js}"></script>
 </body>
 </html>
